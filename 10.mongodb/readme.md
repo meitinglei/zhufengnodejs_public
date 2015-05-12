@@ -81,13 +81,28 @@ var result = db.runCommand({
 ... new:true});//是否返回更新后的值
 print(result);
 #查询
-
-
-
-
-
-
-
-
-
+1.指定返回的字段
+db.persons.find({},{name:1,_id:0});
+2 查询条件 比较运算符
+lt < less than
+lte <= less than equals
+gt > greater than
+gte >= greater than equals
+ne != not equal
+db.persons.find({age:{$gt:5}},{age:1,name:1,_id:0});
+db.persons.find({age:{$ne:3}},{age:1,name:1,_id:0});
+3.指定一个范围,多个条件与
+db.persons.find({age:{$gt:3,$lt:5}},{age:1,name:1,_id:0});
+4.$in包含 $nin不包含
+db.persons.find({age:{$in:[2,4,6,8,10]}},{age:1,name:1,_id:0});
+db.persons.find({age:{$nin:[2,4,6,8,10]}},{age:1,name:1,_id:0});
+5.$or或
+db.persons.find({$or:[{age:{$lt:3}},{age:{$gt:7}}]},{age:1,name:1,_id:0});
+6.null没有这个字段
+db.persons.find({home:null});
+7.正则查询
+db.persons.find({name:/1/});
+8.$not 取反
+db.persons.find({name:{$not:/1/}});
+9.
 
