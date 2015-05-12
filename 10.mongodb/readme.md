@@ -104,5 +104,41 @@ db.persons.find({home:null});
 db.persons.find({name:/1/});
 8.$not 取反
 db.persons.find({name:{$not:/1/}});
-9.
-
+9.$all 数组中包含指定的所有元素
+db.persons.update({},{$pushAll:{lessons:['node','js','mongodb']}},true,true);
+db.persons.find({lessons:{$all:['js','java']}});
+db.persons.find({"lessons.3":'java'});
+10.$size查询指定长度
+db.persons.find({"lessons":{$size:4}});
+db.persons.update({_id:3},{$push:{lessons:"java"},$inc:{size:1}});
+db.persons.find({size:{$gt:3}});
+11.curor游标
+var cur = db.persons.find();
+var p = cur.next();
+print(p);
+```var cur = db.persons.find();
+while(cur.hasNext()){
+... var p = cur.next();
+... print(p._id);
+... }``
+12.$slice 返回数组的指定元素
+db.persons.find({},{lessons:{$slice:[1,2]}});
+db.persons.find({},{lessons:{$slice:-1}}); //最后一个元素
+13.$where 万能查询方法
+db.p.find({'$where':function(){
+    var lessons = this.lessons;
+    var scores = this.scores;
+    if(lessons &&scores ){
+        if(this.age>3){
+            for(var i=0;i<lessons.length;i++){
+                if(lessons[i] == 'js'){
+                    for(var j=0;j<scores.length;j++){
+                        if(scores[j].score >60){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}});
