@@ -26,4 +26,68 @@ article {
 use blog
 ##添加集合和数据
 db.persons.insert({name:'zfpx',age:1});
+##查看数据库下的集合
+show collections;
+##查询集合中的文档
+db.persons.find(); db.persons.findOne();
+#更新记录
+db.persons.update({name:'zfpx'},{$set:{age:10}});
+db.persons.update({name:'zfpx'},{$set:{email:'zfpx@126.com'}});
+##删除文档
+db.persons.remove({name:'zfpx'})
+##删除数据库
+db.dropDatabase();
+#基本语法
+##批量插入
+db.persons.insert([{name:'zfpx1',age:1},{name:'zfpx2',age:2}]);
+for(var i=1;i<=10;i++){ db.persons.insert({name:'zfpx'+i,age:i}); }
+##save&insert
+db.courses.insert({_id:1,name:'javascript',price:200});
+E11000 duplicate key error index: blog.courses.$_id_  dup key: { : 1.0 }
+db.courses.save({_id:1,name:'javascript',price:200});
+##remove删除
+db.courses.remove()
+db.courses.remove({name:'node'})
+##update修改
+强行替换除ID外的整个文档 不推荐这么用
+查询条件 更新条件 （存在则更新，不存在则保存） 是否更新所有匹配到的文档
+db.courses.update({name:'node'},{score:100});
+db.courses.update({name:'node'},{name:'node'},true);
+db.courses.update({price:500},{$set:{price:600}},true,true);
+##修改器
+1. $set 更新某个键,存在则更新，不存在则添加
+2. $inc 只能在数字类型上，增加减少数值
+db.courses.update({},{$inc:{price:500}},true,true);
+Cannot apply $inc modifier to non-number
+3. $unset 删除字段
+db.courses.update({},{$unset:{price:1}},true,true);
+4.$push向数组中增加元素 $pushAll批量加入元素
+db.persons.update({},{$push:{lessons:"js"}},true,true);
+db.persons.update({},{$pushAll:{lessons:['js','node']}},true,true);
+5.$addToSet增加到集合中 元素不重复
+db.persons.update({},{$addToSet:{lessons:'node'}},true,true);
+6.$pop 删除最后一个元素
+db.persons.update({},{$pop:{lessons:1}},true,true);
+7.从数组中删除一个或多个元素
+db.persons.update({},{$pull:{lessons:'node'}},true,true);
+db.persons.update({},{$pullAll:{lessons:['js','mongodb']}},true,true);
+8.数组定位
+db.persons.update({"scores.name":"js"},{$set:{age:100}},true,true)
+9.runCommand findAndModify
+var result = db.runCommand({
+... findAndModify:"persons", //指定操作的集合
+... query:{name:'zfpx'},//指定查询的条件，要更新哪些对象
+... update:{$set:{age:100}},//更新后的值
+... new:true});//是否返回更新后的值
+print(result);
+#查询
+
+
+
+
+
+
+
+
+
 
